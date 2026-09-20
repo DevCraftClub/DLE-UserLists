@@ -23,7 +23,7 @@ return [
 			__('CRUD с фильтрами в админке, права групп, логи LogGenerator info.'),
 		])
 		->changed([
-			__('Стили и скрипты сайта — Public/ + siteAssets, теги {devcraft-header} / {devcraft-scripts}.'),
+			__('Стили и скрипты сайта — Public/ + siteAssets, теги {devcraft-header} / {devcraft-scripts}. У публичного JS — зависимость от dc_public.js и разделы main / showfull / lastnews / tags / allnews (только если записи ещё нет в БД).'),
 			__('Форма редактирования: стандартный отступ кнопок, мультиселект предлагающих, TinyMCE для описания.'),
 			__('Страница шаблонов: кнопка «Копировать» у каждого include.'),
 		])
