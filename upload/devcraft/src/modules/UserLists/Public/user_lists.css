@@ -1,0 +1,4 @@
+.user-lists-open { cursor: pointer; }
+.user-lists-modal .ul-lists-body label { display: block; margin: .35rem 0; }
+.ul-list, .ul-news, .ul-proposals { list-style: disc; margin-left: 1.25rem; }
+.ul-description { margin-bottom: 1rem; }
