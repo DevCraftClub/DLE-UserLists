@@ -139,8 +139,14 @@ final class UserListsPage extends AbstractPage {
 	}
 
 	private function loadFilterSchema(): FilterSchema {
+		$loaded = require DLEPlugins::Check(__DIR__ . '/../Filter/user_lists.filter.schema.php');
+
+		if($loaded instanceof FilterSchema) {
+			return $loaded;
+		}
+
 		/** @var array<string, mixed> $raw */
-		$raw = require DLEPlugins::Check(__DIR__ . '/../Filter/user_lists.filter.schema.php');
+		$raw = is_array($loaded) ? $loaded : [];
 
 		return FilterSchema::fromArray($raw);
 	}

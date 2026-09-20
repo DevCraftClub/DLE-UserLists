@@ -2,7 +2,7 @@
 <dleplugin>
 	<name>UserLists</name>
 	<description>Пользовательские и административные списки новостей</description>
-	<icon>mif-list2</icon>
+	<icon>devcraft/src/modules/UserLists/Public/icon.png</icon>
 	<version>200.1.0</version>
 	<dleversion>20.0</dleversion>
 	<versioncompare>greater</versioncompare>
@@ -11,8 +11,8 @@
 	<needplugin>DevCraft Admin</needplugin>
 	<mnotice>1</mnotice>
 	<mysqlinstall><![CDATA[]]></mysqlinstall>
-	<mysqlupgrade><![CDATA[INSERT INTO {prefix}_admin_sections (name, title, descr, icon, allow_groups) VALUES ('user_lists', 'UserLists v200.1.0', 'Пользовательские списки', 'mif-list2', '1') ON DUPLICATE KEY UPDATE title='UserLists v200.1.0', descr='Пользовательские списки', icon='mif-list2', allow_groups='1';]]></mysqlupgrade>
-	<mysqlenable><![CDATA[INSERT INTO {prefix}_admin_sections (name, title, descr, icon, allow_groups) VALUES ('user_lists', 'UserLists v200.1.0', 'Пользовательские списки', 'mif-list2', '1') ON DUPLICATE KEY UPDATE title='UserLists v200.1.0', descr='Пользовательские списки', icon='mif-list2', allow_groups='1';]]></mysqlenable>
+	<mysqlupgrade><![CDATA[INSERT INTO {prefix}_admin_sections (name, title, descr, icon, allow_groups) VALUES ('user_lists', 'UserLists v200.1.0', 'Пользовательские списки', 'devcraft/src/modules/UserLists/Public/icon.png', '1,2') ON DUPLICATE KEY UPDATE title='UserLists v200.1.0', descr='Пользовательские списки', icon='devcraft/src/modules/UserLists/Public/icon.png', allow_groups='1,2';]]></mysqlupgrade>
+	<mysqlenable><![CDATA[INSERT INTO {prefix}_admin_sections (name, title, descr, icon, allow_groups) VALUES ('user_lists', 'UserLists v200.1.0', 'Пользовательские списки', 'devcraft/src/modules/UserLists/Public/icon.png', '1,2') ON DUPLICATE KEY UPDATE title='UserLists v200.1.0', descr='Пользовательские списки', icon='devcraft/src/modules/UserLists/Public/icon.png', allow_groups='1,2';]]></mysqlenable>
 	<mysqldisable><![CDATA[DELETE FROM {prefix}_admin_sections WHERE name='user_lists';]]></mysqldisable>
 	<mysqldelete><![CDATA[DELETE FROM {prefix}_admin_sections WHERE name='user_lists';]]></mysqldelete>
 	<phpinstall><![CDATA[]]></phpinstall>

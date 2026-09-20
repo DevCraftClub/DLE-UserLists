@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DevCraft\Modules\UserLists\Controller;
 
+use DevCraft\Builders\QueryBuilder;
 use DevCraft\Core\Support\DataManager;
 use DevCraft\Modules\UserLists\Models\UserList;
 use DevCraft\Modules\UserLists\Models\UserListItem;
@@ -22,7 +23,7 @@ final class PageController {
 	 * @param   string  $focus  mine|catalog|view|proposals
 	 */
 	public function render(string $focus, int $listId, int $page): string {
-		global $tpl, $is_logged, $member_id, $config, $db;
+		global $tpl, $is_logged, $member_id, $config;
 
 		$focus = $focus !== '' ? $focus : 'mine';
 		$page  = max(1, $page);
@@ -52,7 +53,7 @@ final class PageController {
 
 		$html = match ($focus) {
 			'catalog'   => $this->catalog($service, $logged, $guestOk, $page, $perPage, $tpl),
-			'view'      => $this->view($service, $logged, $guestOk, $userId, $listId, $page, $perPage, $tpl, $db),
+			'view'      => $this->view($service, $logged, $guestOk, $userId, $listId, $page, $perPage, $tpl),
 			'proposals' => $this->proposals($service, $perms, $logged, $userId, $tpl),
 			default     => $this->mine($service, $perms, $logged, $userId, $tpl),
 		};
@@ -137,7 +138,6 @@ final class PageController {
 		int $page,
 		int $perPage,
 		object $tpl,
-		object $db,
 	): string {
 		$list = $service->listsRepo()->findOneById($listId);
 
@@ -173,17 +173,18 @@ final class PageController {
 		}
 
 		$newsHtml = '';
+		$titles   = $this->newsTitles($items);
 
 		foreach($items as $item) {
-			/** @var UserListItem $item */
-			$row = $db->super_query('SELECT id, title FROM ' . PREFIX . '_post WHERE id=' . (int) $item->news_id . ' LIMIT 1');
+			$newsId = (int) $item->news_id;
+			$title  = $titles[$newsId] ?? null;
 
-			if(!is_array($row) || $row === []) {
+			if($title === null) {
 				continue;
 			}
 
-			$newsHtml .= '<li>#' . (int) $row['id'] . ' '
-				. htmlspecialchars(stripslashes((string) $row['title']), ENT_QUOTES, 'UTF-8')
+			$newsHtml .= '<li>#' . $newsId . ' '
+				. htmlspecialchars($title, ENT_QUOTES, 'UTF-8')
 				. '</li>';
 		}
 
@@ -194,6 +195,44 @@ final class PageController {
 		$tpl->compile('content');
 
 		return (string) ($tpl->result['content'] ?? '');
+	}
+
+	/**
+	 * @param   list<UserListItem>  $items
+	 *
+	 * @return array<int, string> id новости → заголовок
+	 */
+	private function newsTitles(array $items): array {
+		$ids = [];
+
+		foreach($items as $item) {
+			$id = (int) $item->news_id;
+
+			if($id > 0) {
+				$ids[$id] = $id;
+			}
+		}
+
+		if($ids === []) {
+			return [];
+		}
+
+		$rows = QueryBuilder::create('post')
+			->withColumns(['id', 'title'])
+			->withConditionsItem('id', ['op' => 'in', 'value' => array_values($ids)])
+			->load();
+
+		$titles = [];
+
+		foreach($rows as $row) {
+			$id = (int) ($row['id'] ?? 0);
+
+			if($id > 0) {
+				$titles[$id] = stripslashes((string) ($row['title'] ?? ''));
+			}
+		}
+
+		return $titles;
 	}
 
 	/**

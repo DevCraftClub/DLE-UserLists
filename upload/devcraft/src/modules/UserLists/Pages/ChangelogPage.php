@@ -7,12 +7,12 @@ namespace DevCraft\Modules\UserLists\Pages;
 use DevCraft\Core\Abstracts\AbstractPage;
 
 /**
- * История изменений.
+ * Журнал изменений.
  */
 final class ChangelogPage extends AbstractPage {
 
 	public function handle(): array {
-		$pageName = __('История изменений');
+		$pageName = __('Журнал изменений');
 		$this->addBreadcrumb($pageName);
 
 		return [

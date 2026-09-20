@@ -75,7 +75,7 @@ return ModuleManifestBuilder::create()
 			->publicMethod('save_list', SaveListHandler::class, true)
 			->publicMethod('delete_list', DeleteListHandler::class, true)
 	)
-	->changelog(require DLEPlugins::Check(DEVCRAFT_MODULES . '/UserLists/changelog.data.php'))
+	->changelog(require DLEPlugins::Check(__DIR__ . '/changelog.data.php'))
 	->assets(ModuleAssetsBuilder::create()->js('user_lists.js'))
 	->siteAssets(
 		ModuleSiteAssetsBuilder::create()
