@@ -1,0 +1,57 @@
+{% import 'core/includes/form/_macros/_field.twig' as field %}
+
+<h2>{{ page_title }}</h2>
+
+{% include 'core/includes/form/filter_bar.twig' with {
+    mod: mod,
+    action: action,
+    filter_catalog: filter_catalog,
+    filter_rules: filter_rules,
+    filter_chips: filter_chips,
+    order: order,
+    sort: sort
+} only %}
+
+<p class="text-small">{{ total }} {{ 'записей'|trans }}</p>
+
+<div class="mb-3 d-flex flex-wrap gap-2">
+    <button type="button" class="button primary js-ul-create-user"
+            data-owners="{{ owner_options|json_encode|e('html_attr') }}">{{ 'Создать список'|trans }}</button>
+</div>
+
+{% if items|length > 0 %}
+    <table class="table striped row-hover border responsive-md mt-2" id="ul-user-lists" data-ul-dnd-scope="user">
+        <thead>
+        <tr>
+            <th style="width:2.5rem;"></th>
+            <th>#</th>
+            <th>{{ 'Название'|trans }}</th>
+            <th>{{ 'Владелец'|trans }}</th>
+            <th>{{ 'Видимость'|trans }}</th>
+            <th>{{ 'Действия'|trans }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            <tr data-id="{{ item.id }}" draggable="true" class="ul-dnd-row">
+                <td class="ul-dnd-handle" title="{{ 'Перетащить'|trans }}"><span class="mif-move"></span></td>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>
+                    <a href="?mod=editusers&action=edituser&id={{ item.owner_id }}">{{ item.owner_name }}</a>
+                </td>
+                <td>{{ item.visibility }}</td>
+                <td>
+                    <div class="d-flex flex-wrap gap-1">
+                        <a class="button small" href="?mod=user_lists&action=edit&id={{ item.id }}">{{ 'Изменить'|trans }}</a>
+                        <button type="button" class="button small alert js-ul-delete" data-id="{{ item.id }}">{{ 'Удалить'|trans }}</button>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ field.pages(page_urls, current_page) }}
+{% else %}
+    <p class="fg-gray">{{ 'Пользовательских списков пока нет.'|trans }}</p>
+{% endif %}

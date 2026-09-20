@@ -1,0 +1,65 @@
+<h2>{{ page_title }}</h2>
+
+{% if list is null %}
+	<p class="fg-gray">{{ 'Список не найден.'|trans }}</p>
+	<a class="button" href="?mod=user_lists&action=admin_lists">{{ 'К списку'|trans }}</a>
+{% else %}
+	<form id="ul-edit-form" class="mt-2">
+		<input type="hidden" name="id" value="{{ list.id }}">
+		<input type="hidden" name="_admin" value="1">
+
+		<div class="form-group">
+			<label for="ul-edit-name">{{ 'Название'|trans }}</label>
+			<input type="text" id="ul-edit-name" class="metro-input" name="name" value="{{ list.name }}" required>
+		</div>
+
+		{% if list.type == 'user' %}
+			<div class="form-group">
+				<label for="ul-edit-visibility">{{ 'Видимость'|trans }}</label>
+				<select id="ul-edit-visibility" name="visibility" class="metro-input" data-role="select">
+					<option value="private"{% if list.visibility == 'private' %} selected{% endif %}>{{ 'Приватный'|trans }}</option>
+					<option value="public"{% if list.visibility == 'public' %} selected{% endif %}>{{ 'Публичный'|trans }}</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="ul-edit-description">{{ 'Описание'|trans }}</label>
+				<textarea id="ul-edit-description" class="metro-input ajaxwysiwygeditor" name="description" rows="10">{{ list.description }}</textarea>
+			</div>
+
+			<div class="form-group">
+				<label>
+					<input type="checkbox" name="allow_suggestions" value="1" data-role="checkbox" data-style="2"{% if list.allow_suggestions %} checked{% endif %}>
+					{{ 'Разрешить предложения'|trans }}
+				</label>
+			</div>
+
+			<div class="form-group">
+				<label for="ul-edit-policy">{{ 'Политика предложений'|trans }}</label>
+				<select id="ul-edit-policy" name="suggestion_policy" class="metro-input" data-role="select">
+					<option value="whitelist"{% if list.suggestion_policy == 'whitelist' %} selected{% endif %}>{{ 'Белый список'|trans }}</option>
+					<option value="everyone"{% if list.suggestion_policy == 'everyone' %} selected{% endif %}>{{ 'Все залогиненные'|trans }}</option>
+				</select>
+			</div>
+
+			<div class="form-group mt-4">
+				<label for="ul-edit-suggestors">{{ 'Кто может предлагать'|trans }}</label>
+				<select id="ul-edit-suggestors" name="suggestor_ids[]" class="metro-input" multiple data-role="select" data-filter="true" data-drop-height="240">
+					{% for user in users %}
+						<option value="{{ user.id }}"{% if user.id in list.suggestor_ids %} selected{% endif %}>{{ user.name }}</option>
+					{% endfor %}
+				</select>
+				<small class="text-muted d-block mt-1">{{ 'Мультивыбор. Используется при политике «белый список».'|trans }}</small>
+			</div>
+		{% endif %}
+
+		<div class="d-flex flex-wrap gap-2 mt-4">
+			<button type="submit" class="button primary">{{ 'Сохранить'|trans }}</button>
+			<a class="button" href="?mod=user_lists&action={{ list.type == 'admin' ? 'admin_lists' : 'user_lists' }}">{{ 'К списку'|trans }}</a>
+		</div>
+	</form>
+
+	{% if list.type == 'user' and pm_wysiwyg and pm_editor_script %}
+		{% include 'core/includes/ui/templateIncludes/tinymce_editor_scripts.twig' %}
+	{% endif %}
+{% endif %}

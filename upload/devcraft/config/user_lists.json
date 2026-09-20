@@ -1,0 +1,9 @@
+{
+	"guest_can_view_public": false,
+	"button_label": "В списки",
+	"count_web": 20,
+	"count_admin": 50,
+	"bad_words": "",
+	"name_min": 2,
+	"name_max": 100
+}
