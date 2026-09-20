@@ -1,0 +1,59 @@
+<div class="dc-ul-permissions">
+	<h2>{{ page_title|default('Права групп'|trans) }}</h2>
+
+	{% if tabs is empty %}
+		<p>{{ 'Группы пользователей не найдены'|trans }}</p>
+	{% else %}
+		<form id="dc-ul-perm-form-all" class="dc-ul-perm-form-all">
+			<p class="text-muted mb-2">{{ 'Одна кнопка сохраняет настройки всех групп на странице.'|trans }}</p>
+
+			<div class="dc-settings-tabs">
+				<ul id="dc-ul-perm-tabs" data-role="tabs" data-expand="true">
+					{% for tab in tabs %}
+						<li{% if loop.first %} class="active"{% endif %}>
+							<a href="#dc-ul-group-{{ tab.id }}">{{ tab.name }}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class="tabs-targets border bd-default no-border-top p-2">
+				{% for tab in tabs %}
+					<div id="dc-ul-group-{{ tab.id }}" class="dc-ul-perm-panel{% if loop.first %} active{% endif %}" data-group-id="{{ tab.id }}">
+						<table class="table striped table-border row-hover">
+							<tbody>
+								{% for flag in tab.flags %}
+									<tr>
+										<td>
+											<label for="ul-perm-{{ tab.id }}-{{ flag.id }}">{{ flag.title }}</label>
+											<br><small class="text-muted">{{ flag.description }}</small>
+										</td>
+										<td class="text-center" style="width: 8rem; vertical-align: middle;">
+											{% if flag.type == 'int' %}
+												<input type="number" min="0" class="metro-input"
+													name="groups[{{ tab.id }}][{{ flag.id }}]"
+													id="ul-perm-{{ tab.id }}-{{ flag.id }}"
+													value="{{ flag.value }}">
+											{% else %}
+												<input type="checkbox"
+													data-role="checkbox"
+													data-style="2"
+													name="groups[{{ tab.id }}][{{ flag.id }}]"
+													value="1"
+													id="ul-perm-{{ tab.id }}-{{ flag.id }}"
+													{% if flag.checked %}checked{% endif %}>
+											{% endif %}
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				{% endfor %}
+			</div>
+
+			<div class="d-flex flex-wrap gap-2 mt-3">
+				<button type="submit" class="button primary">{{ 'Сохранить все группы'|trans }}</button>
+			</div>
+		</form>
+	{% endif %}
+</div>

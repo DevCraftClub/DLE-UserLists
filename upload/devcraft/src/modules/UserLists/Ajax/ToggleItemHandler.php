@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DevCraft\Modules\UserLists\Ajax;
+
+use DevCraft\Core\Http\AjaxRequest;
+use DevCraft\Core\Http\JsonResponse;
+use DevCraft\Core\Interfaces\ResponseInterface;
+use DevCraft\Core\Interfaces\AjaxHandlerInterface;
+use DevCraft\Modules\UserLists\Services\ListService;
+use Throwable;
+
+/**
+ * Добавление / удаление новости в список.
+ */
+final class ToggleItemHandler implements AjaxHandlerInterface {
+
+	public function handle(AjaxRequest $request): ResponseInterface {
+		global $member_id;
+
+		$userId = (int) ($member_id['user_id'] ?? 0);
+		$listId = (int) ($request->data['list_id'] ?? 0);
+		$newsId = (int) ($request->data['news_id'] ?? 0);
+
+		if($userId <= 0) {
+			return JsonResponse::fail(__('Ошибка'), __('Требуется авторизация'), 'auth', 403);
+		}
+
+		try {
+			$result = (new ListService())->toggleNews($listId, $userId, $newsId);
+
+			return JsonResponse::ok($result);
+		} catch(Throwable $e) {
+			return JsonResponse::fail(__('Ошибка'), $e->getMessage(), 'error', 400);
+		}
+	}
+
+}
