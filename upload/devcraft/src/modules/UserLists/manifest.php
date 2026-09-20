@@ -79,7 +79,14 @@ return ModuleManifestBuilder::create()
 	->assets(ModuleAssetsBuilder::create()->js('user_lists.js'))
 	->siteAssets(
 		ModuleSiteAssetsBuilder::create()
-			->css('user_lists.css')
-			->js('user_lists_public.js')
+			->css(
+				'user_lists.css',
+				available: ['main', 'showfull', 'lastnews', 'tags', 'allnews']
+			)
+			->js(
+				'user_lists_public.js',
+				dependsOn: ['devcraft/src/templates/core/assets/js/dc_public.js'],
+				available: ['main', 'showfull', 'lastnews', 'tags', 'allnews'],
+			)
 	)
 	->build(__DIR__);
